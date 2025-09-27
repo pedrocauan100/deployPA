@@ -13,7 +13,7 @@ def login():
         email = request.form.get('email')
         senha = request.form.get('senha')
 
-        if email == 'admin@example.com' and senha == '1234':
+        if email == 'admin@loja.com' and senha == '1234':
             return redirect(url_for('index'))
         else:
             return render_template('login.html', errou=True)
