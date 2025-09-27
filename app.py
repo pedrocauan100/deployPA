@@ -1,4 +1,25 @@
 from flask import Flask, render_template, request, redirect, url_for
+import mysql.connector as my
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+user = os.getenv('USER')
+password = os.getenv('PASSWORD')
+database = os.getenv('DATABASE')
+host = os.getenv('HOST')
+
+def conectarBanco():
+    conexao = my.connect(
+        user=user,
+        password=password,
+        database=database,
+        host=host
+    )
+    return conexao
+
+conectarBanco()
 
 app = Flask(__name__)
 
