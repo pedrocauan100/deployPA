@@ -15,10 +15,10 @@ host = os.getenv('HOST')
 
 def conectarBanco():
     conexao = my.connect(
-        host="localhost",
-        user="root",
-        password="1234",
-        database="deployPA"
+        host=host,
+        user=user,
+        password=password,
+        database=database
     )
     return conexao
 
