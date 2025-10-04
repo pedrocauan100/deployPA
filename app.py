@@ -13,6 +13,8 @@ password = os.getenv('PASSWORD')
 database = os.getenv('DATABASE')
 host = os.getenv('HOST')
 
+print(f"DEBUG: host={host}, user={user}, database={database}")
+
 def conectarBanco():
     conexao = my.connect(
         host=host,
