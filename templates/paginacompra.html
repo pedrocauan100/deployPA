@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+<div class="container mt-5">
+    <a href="{{ url_for('produtos') }}" class="btn btn-outline-danger mb-4">Voltar</a>
+
+    <div class="card mb-3" style="max-width: 800px;">
+        <div class="row g-0">
+            <div class="col-md-4 d-flex align-items-center justify-content-center p-3">
+                <img src="{{ produto.imagem }}" class="img-fluid rounded-start" alt="Imagem do produto">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h3 class="card-title">{{ produto.nome }}</h3>
+                    <p class="card-text"><strong>R$</strong> {{ produto.preco }}</p>
+                    <p class="card-text"><strong>Tipo:</strong> {{ produto.tipo }}</p>
+                    <p class="card-text">{{ produto.descricao }}</p>
+                    
+                    <!-- Campo de CEP e cálculo de frete -->
+                    <div class="mt-4 border-top pt-3">
+                        <h5>Calcular Frete e Prazo</h5>
+                        <div class="input-group mb-2" style="max-width: 300px;">
+                            <input type="text" class="form-control" id="cep" placeholder="Digite seu CEP" maxlength="9">
+                            <button class="btn btn-outline-primary" type="button" onclick="calcularFrete()">Calcular</button>
+                        </div>
+                        <div id="endereco" class="small mb-2" style="display: none;"></div>
+                        <div id="resultado-frete" class="small"></div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button class="btn btn-success me-2" onclick="comprarAgora()">Comprar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</script>
+
+{% endblock %}

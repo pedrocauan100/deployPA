@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+ 
+{% block conteudo %}
+ 
+<div class="container mt-5">
+    <h1 class="mb-4">Cadastrar Produto</h1>
+    <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">Logout</a>
+ 
+    {% if sucesso %}
+        <div class="alert alert-success" role="alert">
+            Produto cadastrado com sucesso!
+        </div>
+    {% endif %}
+ 
+    <form method="post">
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome</label>
+            <input name="nome" id="nome" type="text" class="form-control" required>
+        </div>
+ 
+        <div class="mb-3">
+            <label for="preco" class="form-label">Preço (R$)</label>
+            <input name="preco" id="preco" type="number" class="form-control" required>
+        </div>
+ 
+        <div class="mb-3">
+            <label for="descricao" class="form-label">Descrição</label>
+            <textarea name="descricao" id="descricao" class="form-control" rows="4" required></textarea>
+        </div>
+ 
+        <div class="mb-3">
+            <label for="imagem" class="form-label">Imagem</label>
+            <input name="imagem" id="imagem" type="url" class="form-control">
+        </div>
+ 
+        <div class="mb-3">
+            <label for="tipo" class="form-label">Tipo do Produto</label>
+            <select name="tipo" id="tipo" class="form-select" required>
+                <option value="" selected disabled>Escolha o tipo</option>
+                <option value="eletronico">Eletrônico</option>
+                <option value="livro">Livro</option>
+                <option value="esporte">Esporte</option>
+                <option value="acessorio">Acessório</option>
+            </select>
+        </div>
+ 
+        <button type="submit" class="btn btn-success">Cadastrar Produto</button>
+    </form>
+</div>
+ 
+{% endblock %}
+
