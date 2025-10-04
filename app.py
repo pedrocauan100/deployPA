@@ -24,9 +24,6 @@ def conectarBanco():
     )
     return conexao
 
-conexao = conectarBanco()
-cursor = conexao.cursor(dictionary=True)
-
 @app.route('/')
 def index():
     titulo = 'Página inicial'
@@ -38,8 +35,12 @@ def login():
         email = request.form['email']
         senha = request.form['senha']
 
+        conexao = conectarBanco()
+        cursor = conexao.cursor(dictionary=True)
+
         cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
         usuario = cursor.fetchone()
+        conexao.close()
 
         if usuario:
             if senha == usuario['senha']:
@@ -70,11 +71,15 @@ def cadastrar_produto():
         imagem = request.form['imagem']
         tipo = request.form['tipo']
 
+        conexao = conectarBanco()
+        cursor = conexao.cursor()
+
         cursor.execute("""
             INSERT INTO produtos (nome, preco, descricao, imagem, tipo)
             VALUES (%s, %s, %s, %s, %s)
         """, (nome, preco, descricao, imagem, tipo))
         conexao.commit()
+        conexao.close()
 
         return render_template('cadastrarproduto.html', sucesso=True)
 
@@ -82,26 +87,30 @@ def cadastrar_produto():
 
 @app.route('/produtos')
 def produtos():
-    print("Sessão atual:", session)  # DEBUG
-
-    if 'usuario' not in session or session.get('tipo') == 'usuario':
-        print("Redirecionando para login...")  # DEBUG
+    if 'usuario' not in session:
         return redirect(url_for('login'))
+
+    conexao = conectarBanco()
+    cursor = conexao.cursor(dictionary=True)
 
     cursor.execute("SELECT * FROM produtos")
     produtos = cursor.fetchall()
+    conexao.close()
 
     return render_template('produtos.html', produtos=produtos)
 
-
 @app.route('/produto/<int:id>')
 def pagina_compra(id):
+    conexao = conectarBanco()
+    cursor = conexao.cursor(dictionary=True)
+
     cursor.execute("SELECT * FROM produtos WHERE id = %s", (id,))
     produto = cursor.fetchone()
- 
+    conexao.close()
+
     if produto is None:
         return "Produto não encontrado", 404
- 
+
     return render_template('paginacompra.html', produto=produto)
 
 @app.route('/logout')
