@@ -44,18 +44,21 @@ def login():
 
         if usuario:
             if senha == usuario['senha']:
+                # Aqui estamos garantindo que o valor de tipo é comparado corretamente
                 session['usuario'] = usuario['email']
                 session['nome'] = usuario['nome']
                 session['tipo'] = usuario['tipo']
 
-                if usuario['tipo'] == 'admin':
+                if usuario['tipo'].strip().lower() == 'admin':  # Verifique por espaços e maiúsculas/minúsculas
                     return redirect(url_for('cadastrar_produto'))
                 else:
                     return redirect(url_for('produtos'))
             else:
-                return render_template('index.html', errou=True)
+                flash('Senha incorreta.', 'error')
+                return redirect(url_for('login'))
         else:
-            return render_template('index.html', errou=True)
+            flash('E-mail não encontrado.', 'error')
+            return redirect(url_for('login'))
 
     return render_template('login.html', errou=False)
 
@@ -98,6 +101,37 @@ def produtos():
     conexao.close()
 
     return render_template('produtos.html', produtos=produtos)
+
+@app.route('/cadastrarConta', methods=['GET', 'POST'])
+def cadastrar_conta():
+    conexao = conectarBanco()
+    if not conexao:
+        return render_template('cadastrarConta.html', erro="Erro de conexão com o banco de dados.", sucesso=False)
+    
+    cursor = conexao.cursor()
+
+    if request.method == 'POST':
+        nome = request.form['nome']
+        email = request.form['email']
+        senha = request.form['senha']
+        tipo = request.form['tipo']
+
+        cursor.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
+        existente = cursor.fetchone()
+
+        if existente:
+            return render_template('cadastrarConta.html', erro="E-mail já cadastrado.", sucesso=False)
+
+        cursor.execute("""
+            INSERT INTO usuarios (nome, email, senha, tipo)
+            VALUES (%s, %s, %s, %s)
+        """, (nome, email, senha, tipo))
+        conexao.commit()
+
+        return render_template('cadastrarConta.html', sucesso=True)
+
+    return render_template('cadastrarConta.html', sucesso=False)
+
 
 @app.route('/produto/<int:id>')
 def pagina_compra(id):
